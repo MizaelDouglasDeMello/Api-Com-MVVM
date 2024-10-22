@@ -1,4 +1,4 @@
-package br.com.mizaeldouglas.api_com_mvvm.model
+package br.com.mizaeldouglas.api_com_mvvm.data.model
 
 data class Post(
     val body: String,

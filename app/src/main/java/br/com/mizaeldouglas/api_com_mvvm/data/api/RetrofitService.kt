@@ -1,4 +1,4 @@
-package br.com.mizaeldouglas.api_com_mvvm.api
+package br.com.mizaeldouglas.api_com_mvvm.data.api
 
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
