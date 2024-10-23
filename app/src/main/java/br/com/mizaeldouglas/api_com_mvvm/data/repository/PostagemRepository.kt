@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import br.com.mizaeldouglas.api_com_mvvm.data.api.JsonPlaceApi
 import br.com.mizaeldouglas.api_com_mvvm.data.model.Post
 
-class PostagemRepository(
+class PostagemRepository (
     private val jsonPlaceApi: JsonPlaceApi
-) {
-    val listaPostagensRepository = MutableLiveData<List<Post>>()
+): IPostagemRepository {
+    override val listaPostagensRepository = MutableLiveData<List<Post>>()
 
-    suspend fun recuperarPostagem() {
+    override suspend fun recuperarPostagem() {
         try {
             val response = jsonPlaceApi.getPosts()
             if (response.isSuccessful && response.body() != null) {

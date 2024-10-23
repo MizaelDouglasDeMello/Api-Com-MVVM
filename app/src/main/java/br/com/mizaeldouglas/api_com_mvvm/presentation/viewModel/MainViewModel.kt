@@ -1,23 +1,20 @@
 package br.com.mizaeldouglas.api_com_mvvm.presentation.viewModel
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.mizaeldouglas.api_com_mvvm.data.model.Post
-import br.com.mizaeldouglas.api_com_mvvm.data.repository.PostagemRepository
+import br.com.mizaeldouglas.api_com_mvvm.data.repository.IPostagemRepository
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val postagemRepository: PostagemRepository
+    private val repository: IPostagemRepository
 ) : ViewModel() {
 
-    var listaPostagens = MutableLiveData<List<Post>>()
-        get() = postagemRepository.listaPostagensRepository
+    val listaPostagens
+        get() = repository.listaPostagensRepository
 
     fun recuperarPostagens() {
-
         viewModelScope.launch {
-            postagemRepository.recuperarPostagem()
+            repository.recuperarPostagem()
         }
     }
 }

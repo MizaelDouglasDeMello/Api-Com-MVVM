@@ -8,9 +8,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import br.com.mizaeldouglas.api_com_mvvm.R
 import br.com.mizaeldouglas.api_com_mvvm.data.api.RetrofitService
-import br.com.mizaeldouglas.api_com_mvvm.data.repository.PostagemRepository
+import br.com.mizaeldouglas.api_com_mvvm.data.repository.PostagemBdRepository
 import br.com.mizaeldouglas.api_com_mvvm.databinding.ActivityMainBinding
 import br.com.mizaeldouglas.api_com_mvvm.presentation.viewModel.MainViewModel
+import br.com.mizaeldouglas.api_com_mvvm.presentation.viewModel.MainViewModelFactory
 
 class MainActivity : AppCompatActivity() {
      private val binding by lazy {
@@ -29,15 +30,18 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         val jsonPlaceApi = RetrofitService.getJsonPlace()
-        val postagemRepository = PostagemRepository(jsonPlaceApi)
+//        val postagemRepository = PostagemRepository(jsonPlaceApi)
+//        val postagemRepository = PostagensFirebaseRepository()
+        val postagemRepository = PostagemBdRepository()
 
 
-        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        mainViewModel = ViewModelProvider(this, MainViewModelFactory(postagemRepository))[MainViewModel::class.java]
+//        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         mainViewModel.listaPostagens.observe(this){listaPostagem ->
             var listaResultado = ""
             listaPostagem.forEach { postagem ->
-                listaResultado += "${postagem.id} -- ${postagem.title} \n"
+                listaResultado += "${postagem.id} - ${postagem.title} \n"
             }
             binding.txtResult.text = listaResultado
         }
