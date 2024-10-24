@@ -9,15 +9,17 @@ import androidx.lifecycle.ViewModelProvider
 import br.com.mizaeldouglas.api_com_mvvm.R
 import br.com.mizaeldouglas.api_com_mvvm.data.api.RetrofitService
 import br.com.mizaeldouglas.api_com_mvvm.data.repository.PostagemBdRepository
+import br.com.mizaeldouglas.api_com_mvvm.data.repository.PostagemRepository
 import br.com.mizaeldouglas.api_com_mvvm.databinding.ActivityMainBinding
+import br.com.mizaeldouglas.api_com_mvvm.domain.usecase.GetPostUseCase
 import br.com.mizaeldouglas.api_com_mvvm.presentation.viewModel.MainViewModel
 import br.com.mizaeldouglas.api_com_mvvm.presentation.viewModel.MainViewModelFactory
 
 class MainActivity : AppCompatActivity() {
-     private val binding by lazy {
-         ActivityMainBinding.inflate(layoutInflater)
-     }
-    private lateinit var mainViewModel : MainViewModel
+    private val binding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+    private lateinit var mainViewModel: MainViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,18 +32,24 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         val jsonPlaceApi = RetrofitService.getJsonPlace()
-//        val postagemRepository = PostagemRepository(jsonPlaceApi)
+        val postagemRepository = PostagemRepository(jsonPlaceApi)
+        val postUseCase = GetPostUseCase(postagemRepository)
+
+
+        /*    --------------- Utilizando Outros Bancos de Dados ---------------      */
+//        val postagemRepository = PostagemBdRepository()
 //        val postagemRepository = PostagensFirebaseRepository()
-        val postagemRepository = PostagemBdRepository()
 
 
-        mainViewModel = ViewModelProvider(this, MainViewModelFactory(postagemRepository))[MainViewModel::class.java]
+
+        mainViewModel =
+            ViewModelProvider(this, MainViewModelFactory(postUseCase))[MainViewModel::class.java]
 //        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
-        mainViewModel.listaPostagens.observe(this){listaPostagem ->
+        mainViewModel.listaPostagens.observe(this) { listaPostagem ->
             var listaResultado = ""
             listaPostagem.forEach { postagem ->
-                listaResultado += "${postagem.id} - ${postagem.title} \n"
+                listaResultado += "${postagem.id} - ${postagem.titulo} \n"
             }
             binding.txtResult.text = listaResultado
         }
